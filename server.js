@@ -30,7 +30,9 @@ app.all("/api/health-check", (req, res) =>
 );
 
 app.get("/", async (req, res) => {
-  return res.status(200).json({ status: true, message: "Hello | MyG_Backend" });
+  return res
+    .status(200)
+    .json({ status: true, message: "Hello | Aiastrology Backend" });
 });
 
 const axios = require("axios");
