@@ -1,0 +1,11 @@
+.vscode
+.env
+node_modules
+package-lock.json
+yarn.lock
+logs/
+coverage/
+uploads
+yarn-error.log
+dist
+src/config/gmail.json
