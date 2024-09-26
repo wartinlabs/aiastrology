@@ -1,9 +1,9 @@
 const User = require("../models/user");
 var admin = require("firebase-admin");
 var fcm = require("fcm-notification");
-var serviceAccount = require("../../app/config/push-notification.json");
-const certPath = admin.credential.cert(serviceAccount);
-var FCM = new fcm(certPath);
+// var serviceAccount = require("../../app/config/push-notification.json");
+// const certPath = admin.credential.cert(serviceAccount);
+// var FCM = new fcm(certPath);
 
 const sendNotification = async (userId, data) => {
   const userData = await User.findById(userId).select("notificationToken");
@@ -25,15 +25,15 @@ const sendNotification = async (userId, data) => {
       token: userData.notificationToken,
     };
 
-    FCM.send(messageData, (err, response) => {
-      if (err) {
-        console.log("Something has gone wrong!", err);
-        // return { status: false, message: err };
-      } else {
-        console.log("Push notification sent...", response);
-        // return { status: true };
-      }
-    });
+    // FCM.send(messageData, (err, response) => {
+    //   if (err) {
+    //     console.log("Something has gone wrong!", err);
+    //     // return { status: false, message: err };
+    //   } else {
+    //     console.log("Push notification sent...", response);
+    //     // return { status: true };
+    //   }
+    // });
   } else {
     console.log("sendNotificationlog notificationToken is null!");
     // return { status: false, message: "Notification token is null!" };
@@ -56,13 +56,13 @@ const sendNotificationMultipleUsers = async (title, body, imageName, users) => {
         token: getPlayer?.notificationToken,
       };
 
-      FCM.send(message, (err, response) => {
-        if (err) {
-          console.log("Something has gone wrong!", err);
-        } else {
-          console.log("Push notification sent.", response);
-        }
-      });
+      // FCM.send(message, (err, response) => {
+      //   if (err) {
+      //     console.log("Something has gone wrong!", err);
+      //   } else {
+      //     console.log("Push notification sent.", response);
+      //   }
+      // });
     }
   }
 };
