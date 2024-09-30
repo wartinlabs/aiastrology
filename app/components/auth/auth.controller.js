@@ -18,20 +18,27 @@ class AuthController {
    */
   async login(req, res) {
     try {
-      const { phone_no, notification_token } = req.body;
+      const { phone_no, callingCode, notification_token } = req.body;
 
       // check phone_no
-      let userData = await User.findOne({ phone_no }).select("phone_no");
+      let userData = await User.findOne({ callingCode, phone_no }).select(
+        "phone_no"
+      );
 
       if (userData) {
         // update otp
         await User.findOneAndUpdate(
-          { phone_no },
+          { callingCode, phone_no },
           { $set: { notification_token, otp: 123456 } }
         ).select("phone_no");
       } else {
         // add new record
-        await new User({ phone_no, otp: 123456, notification_token }).save();
+        await new User({
+          phone_no,
+          callingCode,
+          otp: 123456,
+          notification_token,
+        }).save();
       }
 
       return createResponse(res, true, "Send Otp Success!");
@@ -47,9 +54,10 @@ class AuthController {
     try {
       const { phone_no, otp } = req.body;
 
-      const getPhoneNoPlayer = await User.findOne({ phone_no }).select(
-        "phone_no otp"
-      );
+      const getPhoneNoPlayer = await User.findOne({
+        callingCode,
+        phone_no,
+      }).select("phone_no otp");
 
       if (!getPhoneNoPlayer)
         return createResponse(res, false, "Phone No is Wrong!");

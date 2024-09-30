@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    callingCode: {
+      type: String,
+    },
     otp: {
       type: Number,
     },
