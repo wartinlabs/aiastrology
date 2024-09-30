@@ -45,7 +45,7 @@ module.exports = (server) => {
 
         const userData = await User.findOne({
           _id: userId,
-        }).select("email");
+        }).select("phone_no");
 
         if (!userData) {
           socket.emit("socket_error", {
@@ -82,7 +82,7 @@ module.exports = (server) => {
         //   .select("users isGroup")
         //   .populate({
         //     path: "users",
-        //     select: "name email emailVerified status",
+        //     select: "name phone_no phone_no_verified status",
         //   })
         //   .exec();
 
@@ -105,8 +105,8 @@ module.exports = (server) => {
                 {
                   $project: {
                     name: 1,
-                    email: 1,
-                    emailVerified: 1,
+                    phone_no: 1,
+                    phone_no_verified: 1,
                     status: 1,
                   },
                 },
@@ -183,8 +183,8 @@ module.exports = (server) => {
                 {
                   $project: {
                     name: 1,
-                    email: 1,
-                    emailVerified: 1,
+                    phone_no: 1,
+                    phone_no_verified: 1,
                     status: 1,
                   },
                 },
@@ -438,11 +438,11 @@ module.exports = (server) => {
 
         const userData = await User.findOne({
           _id: senderUserId,
-        }).select("email");
+        }).select("phone_no");
 
         const receiverUserData = await User.findOne({
           _id: receiverUserId,
-        }).select("email");
+        }).select("phone_no");
 
         if (!userData) {
           socket.emit("socket_error", {
@@ -482,7 +482,7 @@ module.exports = (server) => {
 
         const playerIdSender = getKeyByValue(app_users, socketIdSender);
 
-        const userData = User.find({ status: 1 }).select("email");
+        const userData = User.find({ status: 1 }).select("phone_no");
 
         const result = {
           users: userData,
@@ -858,7 +858,7 @@ module.exports = (server) => {
 
         if (playerId) {
           const userData = await User.findOne({ _id: playerId }).select(
-            "username email status"
+            "username phone_no status"
           );
 
           if (userData) {

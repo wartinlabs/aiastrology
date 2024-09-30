@@ -51,7 +51,7 @@ class UserController {
           $set: { f_name, l_name, bio },
         },
         { new: true }
-      ).select("email f_name l_name bio");
+      ).select("phone_no f_name l_name bio");
 
       return createResponse(res, true, "Success!", playerData);
     } catch (e) {
@@ -76,7 +76,7 @@ class UserController {
         const url = uploadRes?.message?.Location;
 
         await User.findByIdAndUpdate(userId, { $set: { image: url } }).select(
-          "email"
+          "phone_no"
         );
 
         return createResponse(
@@ -110,7 +110,7 @@ class UserController {
           {
             $project: {
               _id: 1,
-              email: 1,
+              phone_no: 1,
               name: 1,
               status: 1,
             },

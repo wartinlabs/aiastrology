@@ -68,7 +68,7 @@ class AuthController {
             { phone_no },
             {
               $set: {
-                emailVerified: true,
+                phone_no_verified: true,
               },
             }
           ).select("phone_no");
@@ -138,12 +138,12 @@ class AuthController {
     try {
       const userId = req.user.id;
 
-      const result = await User.findById(userId).select("email");
+      const result = await User.findById(userId).select("phone_no");
 
       if (result) {
         await User.findByIdAndUpdate(userId, {
           $set: { notificationToken: null, status: 0 },
-        }).select("email");
+        }).select("phone_no");
       } else {
         return createResponse(res, false, "Something Went Wrong!");
       }
