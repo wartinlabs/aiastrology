@@ -21,9 +21,11 @@ class AuthController {
       const { phone_no, callingCode, notification_token } = req.body;
 
       // check phone_no
-      let userData = await User.findOne({ callingCode, phone_no }).select(
-        "phone_no"
-      );
+      let userData = await User.findOne({
+        callingCode,
+        phone_no,
+        phone_no_verified: false,
+      }).select("phone_no");
 
       if (userData) {
         // update otp
