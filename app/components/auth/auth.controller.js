@@ -78,12 +78,12 @@ class AuthController {
 
           getUserData.token = token;
 
-          return createResponse(res, true, "INCORRECT OTP", {
+          return createResponse(res, true, "OTP is Verified!", {
             phone_no,
             token,
           });
         } else {
-          return createResponse(res, false, "OTP is Wrong!");
+          return createResponse(res, false, "INCORRECT OTP");
         }
       } else {
         return createResponse(res, false, "Server Error!");
