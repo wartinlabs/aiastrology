@@ -55,7 +55,6 @@ class AuthController {
       const { phone_no, otp } = req.body;
 
       const getPhoneNoPlayer = await User.findOne({
-        callingCode,
         phone_no,
       }).select("phone_no otp");
 
