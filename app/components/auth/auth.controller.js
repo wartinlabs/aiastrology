@@ -78,7 +78,7 @@ class AuthController {
 
           getUserData.token = token;
 
-          return createResponse(res, true, "OTP is Verified!", {
+          return createResponse(res, true, "INCORRECT OTP", {
             phone_no,
             token,
           });
