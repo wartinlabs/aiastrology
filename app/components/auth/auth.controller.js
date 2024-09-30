@@ -83,7 +83,7 @@ class AuthController {
             token,
           });
         } else {
-          return createResponse(res, false, "INCORRECT OTP");
+          return createResponse(res, false, "Incorrect Otp!");
         }
       } else {
         return createResponse(res, false, "Server Error!");
