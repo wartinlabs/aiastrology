@@ -36,7 +36,7 @@ app.get("/", async (req, res) => {
 });
 
 const axios = require("axios");
-app.get("/check", async (req, res) => {
+app.get("/aistrology-one", async (req, res) => {
   try {
     console.log("check...");
 
@@ -99,6 +99,79 @@ app.get("/check", async (req, res) => {
         astro: astroData.data,
         planets: planetsData.data,
         vdasha: vdashaData.data,
+      },
+    });
+  } catch (err) {
+    console.log("check err...", err);
+  }
+});
+
+app.post("/aistrology-two", async (req, res) => {
+  try {
+    const { day, month, year, hour, min, lat, lon, tzone, name } = req.body;
+
+    console.log("req.body...", req.body);
+
+    const username = "633323";
+    const password = "7a881d0ea57f30213be9e2c9b60e183b97cb1c3d";
+
+    // Encode the credentials in base64
+    const auth = btoa(`${username}:${password}`);
+
+    const data = {
+      day,
+      month,
+      year,
+      hour,
+      min,
+      lat,
+      lon,
+      tzone,
+      name,
+    };
+
+    let numero_config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://json.astrologyapi.com/v1/numero_table",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
+      },
+      data: JSON.stringify(data),
+    };
+    const numeroData = await axios.request(numero_config);
+
+    let basic_panchang_config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://json.astrologyapi.com/v1/basic_panchang",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
+      },
+      data: JSON.stringify(data),
+    };
+    const basicPanchangData = await axios.request(basic_panchang_config);
+
+    let general_ascendant_config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://json.astrologyapi.com/v1/general_ascendant_report",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${auth}`,
+      },
+      data: JSON.stringify(data),
+    };
+    const generalAscendantData = await axios.request(general_ascendant_config);
+
+    return res.json({
+      status: true,
+      message: {
+        numero: numeroData.data,
+        basicPanchang: basicPanchangData.data,
+        generalAscendant: generalAscendantData.data,
       },
     });
   } catch (err) {
