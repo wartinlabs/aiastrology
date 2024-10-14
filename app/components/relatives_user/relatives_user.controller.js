@@ -1,7 +1,68 @@
 const { createError, createResponse } = require("../../utils/helpers");
-
 const RelativesUser = require("../../models/relatives_user");
+const env = require("../../config/env");
+const axios = require("axios");
 
+const getRashi = async (day, month, year, hour, min, lat, lon, tzone) => {
+  const username = env.ASTRO_USER_NAME;
+  const password = env.ASTRO_PASSWORD;
+
+  // Encode the credentials in base64
+  const auth = btoa(`${username}:${password}`);
+
+  const data = {
+    day,
+    month,
+    year,
+    hour,
+    min,
+    lat,
+    lon,
+    tzone,
+  };
+
+  let astro_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/astro_details",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const astroData = await axios.request(astro_config);
+
+  let planets_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/planets",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const planetsData = await axios.request(planets_config);
+
+  let vdasha_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/current_vdasha",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const vdashaData = await axios.request(vdasha_config);
+
+  return {
+    astro: astroData.data,
+    planets: planetsData.data,
+    vdasha: vdashaData.data,
+  };
+};
 class AuthController {
   /**
    * @description Add Relatives User
@@ -16,9 +77,28 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone,
       } = req.body;
 
-      await new RelativesUser({
+      const rashi = await getRashi(
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone
+      );
+
+      const result = await new RelativesUser({
         userId,
         name,
         gender,
@@ -26,9 +106,10 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        rashi,
       }).save();
 
-      return createResponse(res, true, "Add Relative Successfully!");
+      return createResponse(res, true, "Add Relative Successfully!", result);
     } catch (e) {
       return createError(res, e);
     }
@@ -47,18 +128,42 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone,
       } = req.body;
 
-      await RelativesUser.findByIdAndUpdate(id, {
-        name,
-        gender,
-        date_of_birth,
-        time_of_birth,
-        place_of_birth,
-        country,
-      }).select("name");
+      const rashi = await getRashi(
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone
+      );
 
-      return createResponse(res, true, "Update Relative Successfully!");
+      const result = await RelativesUser.findByIdAndUpdate(
+        id,
+        {
+          name,
+          gender,
+          date_of_birth,
+          time_of_birth,
+          place_of_birth,
+          country,
+          rashi,
+        },
+        { new: true }
+      ).select("name");
+
+      return createResponse(res, true, "Update Relative Successfully!", result);
     } catch (e) {
       return createError(res, e);
     }

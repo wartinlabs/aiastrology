@@ -28,6 +28,9 @@ const relativesUserSchema = new mongoose.Schema(
     country: {
       type: String,
     },
+    rashi: {
+      type: Object,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
