@@ -129,7 +129,9 @@ class UserController {
           },
         },
         { new: true }
-      ).select("name");
+      ).select(
+        "name gender date_of_birth time_of_birth place_of_birth country rashi"
+      );
 
       return createResponse(res, true, "Update Successfully!", result);
     } catch (e) {
