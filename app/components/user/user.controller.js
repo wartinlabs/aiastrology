@@ -135,7 +135,20 @@ class UserController {
         "name image gender date_of_birth time_of_birth place_of_birth country rashi"
       );
 
-      return createResponse(res, true, "Update Successfully!", result);
+      const data = {
+        image: result.image,
+        date_of_birth: result.date_of_birth,
+        gender: result.gender,
+        name: result.name,
+        place_of_birth: result.place_of_birth,
+        rashi: result.rashi,
+        time_of_birth: result.time_of_birth,
+        country: result.country,
+        lat,
+        lon,
+      };
+
+      return createResponse(res, true, "Update Successfully!", data);
     } catch (e) {
       return createError(res, e);
     }
