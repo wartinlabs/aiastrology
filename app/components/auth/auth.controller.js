@@ -71,15 +71,16 @@ class AuthController {
               $set: {
                 phone_no_verified: true,
               },
-            }
-          ).select("phone_no");
+            },
+            { new: true }
+          );
 
           const { token } = jwtGenerator(getUserData?._id);
 
           getUserData.token = token;
 
           return createResponse(res, true, "OTP is Verified!", {
-            phone_no,
+            data: getUserData,
             token,
           });
         } else {
