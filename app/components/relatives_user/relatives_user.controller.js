@@ -111,7 +111,20 @@ class AuthController {
         rashi,
       }).save();
 
-      return createResponse(res, true, "Add Relative Successfully!", result);
+      const data = {
+        image: result.image,
+        date_of_birth: result.date_of_birth,
+        gender: result.gender,
+        name: result.name,
+        place_of_birth: result.place_of_birth,
+        rashi: result.rashi,
+        time_of_birth: result.time_of_birth,
+        country: result.country,
+        lat,
+        lon,
+      };
+
+      return createResponse(res, true, "Add Relative Successfully!", data);
     } catch (e) {
       return createError(res, e);
     }
@@ -165,9 +178,22 @@ class AuthController {
           rashi,
         },
         { new: true }
-      ).select("name");
+      );
 
-      return createResponse(res, true, "Update Relative Successfully!", result);
+      const data = {
+        image: result.image,
+        date_of_birth: result.date_of_birth,
+        gender: result.gender,
+        name: result.name,
+        place_of_birth: result.place_of_birth,
+        rashi: result.rashi,
+        time_of_birth: result.time_of_birth,
+        country: result.country,
+        lat,
+        lon,
+      };
+
+      return createResponse(res, true, "Update Relative Successfully!", data);
     } catch (e) {
       return createError(res, e);
     }
