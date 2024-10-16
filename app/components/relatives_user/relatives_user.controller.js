@@ -77,6 +77,7 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        image,
         day,
         month,
         year,
@@ -106,6 +107,7 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        image,
         rashi,
       }).save();
 
@@ -128,6 +130,7 @@ class AuthController {
         time_of_birth,
         place_of_birth,
         country,
+        image,
         day,
         month,
         year,
@@ -158,6 +161,7 @@ class AuthController {
           time_of_birth,
           place_of_birth,
           country,
+          image,
           rashi,
         },
         { new: true }

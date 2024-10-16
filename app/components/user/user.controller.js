@@ -94,6 +94,7 @@ class UserController {
         time_of_birth,
         place_of_birth,
         country,
+        image,
         day,
         month,
         year,
@@ -125,12 +126,13 @@ class UserController {
             time_of_birth,
             place_of_birth,
             country,
+            image,
             rashi,
           },
         },
         { new: true }
       ).select(
-        "name gender date_of_birth time_of_birth place_of_birth country rashi"
+        "name image gender date_of_birth time_of_birth place_of_birth country rashi"
       );
 
       return createResponse(res, true, "Update Successfully!", result);
