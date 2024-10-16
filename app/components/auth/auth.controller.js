@@ -24,8 +24,8 @@ class AuthController {
       let userData = await User.findOne({
         callingCode,
         phone_no,
-        phone_no_verified: false,
       }).select("phone_no");
+      console.log("userData...", userData);
 
       if (userData) {
         // update otp
