@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const cron = require("node-cron");
 const app = express();
 const { isCelebrateError } = require("celebrate");
 
@@ -33,6 +34,55 @@ app.get("/", async (req, res) => {
   return res
     .status(200)
     .json({ status: true, message: "Hello | Aiastrology Backend" });
+});
+
+const HistoryCall = require("./app/models/history-call");
+const User = require("./app/models/user");
+const { checkTimeAndCutBalance } = require("./app/socket/socket_handler");
+
+// i have create cron job for the timeBalance is low or not
+cron.schedule("*/10 * * * * *", async () => {
+  // console.log("node-cron...");
+
+  const getAllStartingCall = await HistoryCall.find({ status: "Starting" });
+
+  if (getAllStartingCall.length > 0) {
+    // console.log("find startings call...");
+
+    for (let i = 0; i < getAllStartingCall.length; i++) {
+      const getUser = await User.findById(getAllStartingCall[i].userId).select(
+        "timeBalance"
+      );
+      // console.log("getUser...", getUser);
+
+      const start_time = new Date(getAllStartingCall[i].start_time);
+      const end_time = new Date();
+      const differenceInSeconds = (end_time - start_time) / 1000;
+
+      if (getUser?.timeBalance > differenceInSeconds) {
+        // time balance is enough.
+        // console.log("time balance is enough.");
+      } else {
+        // time balance is low.
+        // console.log("time balance is low.");
+        await checkTimeAndCutBalance(
+          getAllStartingCall[i]?.userId,
+          differenceInSeconds
+        );
+
+        await HistoryCall.findByIdAndUpdate(getAllStartingCall[i]._id, {
+          $set: {
+            end_time,
+            time: differenceInSeconds,
+            status: "AutoClosed",
+          },
+        }).select("historyCallId");
+      }
+    }
+  } else {
+    // not find starting calls...
+    // console.log("not find starting calls...");
+  }
 });
 
 const axios = require("axios");
@@ -110,10 +160,8 @@ app.post("/aistrology-two", async (req, res) => {
   try {
     const { day, month, year, hour, min, lat, lon, tzone, name } = req.body;
 
-    console.log("req.body...", req.body);
-
-    const username = "633323";
-    const password = "7a881d0ea57f30213be9e2c9b60e183b97cb1c3d";
+    const username = "634820";
+    const password = "c545ff3cb6dedd4e4b1d2727a4e98f2d1c06ce86";
 
     // Encode the credentials in base64
     const auth = btoa(`${username}:${password}`);
@@ -176,14 +224,15 @@ app.post("/aistrology-two", async (req, res) => {
     });
   } catch (err) {
     console.log("check err...", err);
+    return res.json({ status: false, message: err });
   }
 });
-
 // Invalid Route
 app.all("/api/*", (req, res) =>
   res.status(400).json({ status: 400, message: "Bad Request" })
 );
 
+const { MulterError } = require("multer");
 let errorHandling = (err, req, res, next) => {
   let message = err.message;
   console.log("err::", err);
@@ -231,7 +280,6 @@ connect(env.DB_CONNECTION_STRING)
 //Socket Code
 const Http = require("http").createServer(app);
 const socketConnection = require("./app/socket/socket");
-const { MulterError } = require("multer");
 socketConnection(Http);
 
 module.exports = { Http };

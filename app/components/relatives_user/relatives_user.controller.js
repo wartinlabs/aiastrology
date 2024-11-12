@@ -63,6 +63,78 @@ const getRashi = async (day, month, year, hour, min, lat, lon, tzone) => {
     vdasha: vdashaData.data,
   };
 };
+
+const GetHoroscopeDetails = async (
+  day,
+  month,
+  year,
+  hour,
+  min,
+  lat,
+  lon,
+  tzone,
+  name
+) => {
+  const username = env.ASTRO_USER_NAME;
+  const password = env.ASTRO_PASSWORD;
+
+  // Encode the credentials in base64
+  const auth = btoa(`${username}:${password}`);
+
+  const data = {
+    day,
+    month,
+    year,
+    hour,
+    min,
+    lat,
+    lon,
+    tzone,
+    name,
+  };
+
+  let numero_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/numero_table",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const numeroData = await axios.request(numero_config);
+
+  let basic_panchang_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/basic_panchang",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const basicPanchangData = await axios.request(basic_panchang_config);
+
+  let general_ascendant_config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://json.astrologyapi.com/v1/general_ascendant_report",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${auth}`,
+    },
+    data: JSON.stringify(data),
+  };
+  const generalAscendantData = await axios.request(general_ascendant_config);
+
+  return {
+    numero: numeroData.data,
+    basicPanchang: basicPanchangData.data,
+    generalAscendant: generalAscendantData.data,
+  };
+};
 class AuthController {
   /**
    * @description Add Relatives User
@@ -109,6 +181,14 @@ class AuthController {
         country,
         image,
         rashi,
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone,
       }).save();
 
       const data = {
@@ -176,6 +256,14 @@ class AuthController {
           country,
           image,
           rashi,
+          day,
+          month,
+          year,
+          hour,
+          min,
+          lat,
+          lon,
+          tzone,
         },
         { new: true }
       );
@@ -264,6 +352,37 @@ class AuthController {
       );
     } catch (e) {
       return createError(res, e);
+    }
+  }
+
+  /**
+   * @description Get Horoscope Data
+   */
+  async GetHoroscopeData(req, res) {
+    try {
+      const { day, month, year, hour, min, lat, lon, tzone, name } = req.body;
+
+      const result = await GetHoroscopeDetails(
+        day,
+        month,
+        year,
+        hour,
+        min,
+        lat,
+        lon,
+        tzone,
+        name
+      );
+
+      return createResponse(
+        res,
+        true,
+        "Get All Relative users Successfully!",
+        result
+      );
+    } catch (err) {
+      console.log("err...", err);
+      return createError(res, err);
     }
   }
 }

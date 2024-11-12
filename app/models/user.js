@@ -35,8 +35,9 @@ const userSchema = new mongoose.Schema(
     country: {
       type: String,
     },
-    balance: {
-      type: String,
+    timeBalance: {
+      type: Number, // seconds
+      default: 0,
     },
     notification_token: {
       type: String,
@@ -52,6 +53,19 @@ const userSchema = new mongoose.Schema(
     },
     rashi: {
       type: Object,
+    },
+    day: { type: Number },
+    hour: { type: Number },
+    lat: { type: Number },
+    lon: { type: Number },
+    min: { type: Number },
+    month: { type: Number },
+    year: { type: Number },
+    tzone: { type: Number },
+    status: {
+      type: Number,
+      enum: [0, 1], // 0: offline, 1: online
+      default: 0,
     },
     token: {
       type: String,

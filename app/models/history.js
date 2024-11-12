@@ -6,6 +6,10 @@ const historySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
+    purchasePackageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "purchase-package",
+    },
     amount: {
       type: Number,
       default: 0,

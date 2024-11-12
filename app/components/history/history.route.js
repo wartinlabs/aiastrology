@@ -13,13 +13,33 @@ router.post("/add-money", auth, (req, res) => {
 });
 
 /**
- * @route POST api/history/update-history-status/:id
- * @description Update History Status
+ * @route GET api/history/get-history
+ * @description Get History
  * @returns JSON
  * @access public
  */
-router.post("/update-history-status/:id", auth, (req, res) => {
-  UserController.updateHistoryStatus(req, res);
+router.get("/get-history", auth, (req, res) => {
+  UserController.getHistory(req, res);
+});
+
+/**
+ * @route GET api/history/get-all-history
+ * @description Get All History
+ * @returns JSON
+ * @access public
+ */
+router.get("/get-all-history", auth, (req, res) => {
+  UserController.getAllHistory(req, res);
+});
+
+/**
+ * @route GET api/history/get-call-history
+ * @description Get All History
+ * @returns JSON
+ * @access public
+ */
+router.get("/get-call-history", auth, (req, res) => {
+  UserController.getCallHistory(req, res);
 });
 
 module.exports = router;

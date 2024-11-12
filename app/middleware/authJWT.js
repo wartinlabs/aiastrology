@@ -22,6 +22,10 @@ module.exports.auth = async (req, res, next) => {
     };
     next();
   } catch (err) {
+    if (err.message === "jwt expired") {
+      return createResponse(res, false, "jwt expired!", null, 401);
+    }
+
     return createError(res, err);
   }
 };

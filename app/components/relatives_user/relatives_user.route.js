@@ -62,4 +62,14 @@ router.get("/get_all_relatives_user", auth, (req, res) => {
   RelativesUserController.GetAllRelativesUsers(req, res);
 });
 
+/**
+ * @route POST api/relatives_user/get_horoscope_data
+ * @description Get Horoscope Data
+ * @returns JSON
+ * @access public
+ */
+router.post("/get_horoscope_data", auth, (req, res) => {
+  RelativesUserController.GetHoroscopeData(req, res);
+});
+
 module.exports = router;

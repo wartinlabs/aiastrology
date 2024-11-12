@@ -31,6 +31,14 @@ const relativesUserSchema = new mongoose.Schema(
     rashi: {
       type: Object,
     },
+    day: { type: Number },
+    hour: { type: Number },
+    lat: { type: Number },
+    lon: { type: Number },
+    min: { type: Number },
+    month: { type: Number },
+    year: { type: Number },
+    tzone: { type: Number },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
