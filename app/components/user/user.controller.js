@@ -144,6 +144,7 @@ class UserController {
       );
 
       const data = {
+        _id: userId,
         image: result.image,
         date_of_birth: result.date_of_birth,
         gender: result.gender,
