@@ -14,7 +14,8 @@ const { default: mongoose } = require("mongoose");
 exports.createResponse = (res, status, message, payload, statusCode) => {
   if (status) statusCode = 200;
   else statusCode = statusCode || 400;
-  res.json({
+
+  res.status(statusCode).json({
     status,
     message,
     data: payload,
