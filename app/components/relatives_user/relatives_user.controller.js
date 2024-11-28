@@ -160,16 +160,11 @@ class AuthController {
         tzone,
       } = req.body;
 
-      const rashi = await getRashi(
-        day,
-        month,
-        year,
-        hour,
-        min,
-        lat,
-        lon,
-        tzone
-      );
+      let rashi = await getRashi(day, month, year, hour, min, lat, lon, tzone);
+
+      rashi.dob = date_of_birth;
+      rashi.tob = time_of_birth;
+      rashi.pob = place_of_birth;
 
       const result = await new RelativesUser({
         userId,
@@ -234,16 +229,11 @@ class AuthController {
         tzone,
       } = req.body;
 
-      const rashi = await getRashi(
-        day,
-        month,
-        year,
-        hour,
-        min,
-        lat,
-        lon,
-        tzone
-      );
+      let rashi = await getRashi(day, month, year, hour, min, lat, lon, tzone);
+
+      rashi.dob = date_of_birth;
+      rashi.tob = time_of_birth;
+      rashi.pob = place_of_birth;
 
       const result = await RelativesUser.findByIdAndUpdate(
         id,

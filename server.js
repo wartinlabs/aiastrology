@@ -160,8 +160,8 @@ app.post("/aistrology-two", async (req, res) => {
   try {
     const { day, month, year, hour, min, lat, lon, tzone, name } = req.body;
 
-    const username = "634820";
-    const password = "c545ff3cb6dedd4e4b1d2727a4e98f2d1c06ce86";
+    const username = "633323";
+    const password = "7a881d0ea57f30213be9e2c9b60e183b97cb1c3d";
 
     // Encode the credentials in base64
     const auth = btoa(`${username}:${password}`);
