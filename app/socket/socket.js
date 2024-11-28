@@ -34,6 +34,7 @@ module.exports = (server) => {
     socket.on("join_call", async (data) => {
       try {
         const { userId } = data;
+        console.log("join_call data...", data);
 
         app_users[userId] = socket.id;
 
@@ -82,6 +83,7 @@ module.exports = (server) => {
     socket.on("end_call", async (data) => {
       try {
         const { historyCallId } = data;
+        console.log("end_call data...", data);
 
         const getHistoryCall = await HistoryCall.findById(historyCallId).select(
           "start_time userId"
