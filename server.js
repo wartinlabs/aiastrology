@@ -41,49 +41,49 @@ const User = require("./app/models/user");
 const { checkTimeAndCutBalance } = require("./app/socket/socket_handler");
 
 // i have create cron job for the timeBalance is low or not
-cron.schedule("*/10 * * * * *", async () => {
-  // console.log("node-cron...");
+// cron.schedule("*/10 * * * * *", async () => {
+//   // console.log("node-cron...");
 
-  const getAllStartingCall = await HistoryCall.find({ status: "Starting" });
+//   const getAllStartingCall = await HistoryCall.find({ status: "Starting" });
 
-  if (getAllStartingCall.length > 0) {
-    // console.log("find startings call...");
+//   if (getAllStartingCall.length > 0) {
+//     // console.log("find startings call...");
 
-    for (let i = 0; i < getAllStartingCall.length; i++) {
-      const getUser = await User.findById(getAllStartingCall[i].userId).select(
-        "timeBalance"
-      );
-      // console.log("getUser...", getUser);
+//     for (let i = 0; i < getAllStartingCall.length; i++) {
+//       const getUser = await User.findById(getAllStartingCall[i].userId).select(
+//         "timeBalance"
+//       );
+//       // console.log("getUser...", getUser);
 
-      const start_time = new Date(getAllStartingCall[i].start_time);
-      const end_time = new Date();
-      const differenceInSeconds = (end_time - start_time) / 1000;
+//       const start_time = new Date(getAllStartingCall[i].start_time);
+//       const end_time = new Date();
+//       const differenceInSeconds = (end_time - start_time) / 1000;
 
-      if (getUser?.timeBalance > differenceInSeconds) {
-        // time balance is enough.
-        // console.log("time balance is enough.");
-      } else {
-        // time balance is low.
-        // console.log("time balance is low.");
-        await checkTimeAndCutBalance(
-          getAllStartingCall[i]?.userId,
-          differenceInSeconds
-        );
+//       if (getUser?.timeBalance > differenceInSeconds) {
+//         // time balance is enough.
+//         // console.log("time balance is enough.");
+//       } else {
+//         // time balance is low.
+//         // console.log("time balance is low.");
+//         await checkTimeAndCutBalance(
+//           getAllStartingCall[i]?.userId,
+//           differenceInSeconds
+//         );
 
-        await HistoryCall.findByIdAndUpdate(getAllStartingCall[i]._id, {
-          $set: {
-            end_time,
-            time: differenceInSeconds,
-            status: "AutoClosed",
-          },
-        }).select("historyCallId");
-      }
-    }
-  } else {
-    // not find starting calls...
-    // console.log("not find starting calls...");
-  }
-});
+//         await HistoryCall.findByIdAndUpdate(getAllStartingCall[i]._id, {
+//           $set: {
+//             end_time,
+//             time: differenceInSeconds,
+//             status: "AutoClosed",
+//           },
+//         }).select("historyCallId");
+//       }
+//     }
+//   } else {
+//     // not find starting calls...
+//     // console.log("not find starting calls...");
+//   }
+// });
 
 const axios = require("axios");
 app.get("/aistrology-one", async (req, res) => {

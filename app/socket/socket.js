@@ -53,15 +53,15 @@ module.exports = (server) => {
           return;
         }
 
-        if (userData.timeBalance <= 0) {
-          console.log("User Time Balance is not enough for the start call!...");
+        // if (userData.timeBalance <= 0) {
+        //   console.log("User Time Balance is not enough for the start call!...");
 
-          socket.emit("socket_error", {
-            status: false,
-            message: "User Time Balance is not enough for the start call!",
-          });
-          return;
-        }
+        //   socket.emit("socket_error", {
+        //     status: false,
+        //     message: "User Time Balance is not enough for the start call!",
+        //   });
+        //   return;
+        // }
 
         const result = await new HistoryCall({ userId }).save();
 
@@ -123,10 +123,10 @@ module.exports = (server) => {
         const end_time = new Date();
         const differenceInSeconds = (end_time - start_time) / 1000;
 
-        await checkTimeAndCutBalance(
-          getHistoryCall?.userId,
-          differenceInSeconds
-        );
+        // await checkTimeAndCutBalance(
+        //   getHistoryCall?.userId,
+        //   differenceInSeconds
+        // );
 
         await HistoryCall.findByIdAndUpdate(historyCallId, {
           $set: {
