@@ -41,8 +41,11 @@ module.exports = (server) => {
         const userData = await User.findOne({
           _id: userId,
         }).select("phone_no timeBalance");
+        console.log("join_call userData...", userData);
 
         if (!userData) {
+          console.log("User not found! Invalid Id!...");
+
           socket.emit("socket_error", {
             status: false,
             message: "User not found! Invalid Id!",
@@ -51,6 +54,8 @@ module.exports = (server) => {
         }
 
         if (userData.timeBalance <= 0) {
+          console.log("User Time Balance is not enough for the start call!...");
+
           socket.emit("socket_error", {
             status: false,
             message: "User Time Balance is not enough for the start call!",
@@ -63,12 +68,28 @@ module.exports = (server) => {
         userData.status = 1;
         await userData.save();
 
+        console.log("join_call result...", result);
+
         const resJson = {
           userData,
           historyCallId: result._id,
         };
 
-        io.to(socket.id).emit("user_join_call", resJson);
+        console.log("join_call resJson...", resJson);
+
+        const socketIdSender = app_users[userId];
+
+        console.log("join_call socket.id...", socket.id);
+
+        const playerIdSender = getKeyByValue(app_users, socketIdSender);
+        console.log("join_call playerIdSender...", playerIdSender);
+
+        if (playerIdSender) {
+          console.log("call playerIdSender...");
+          return io.to(socketIdSender).emit("user_join_call", resJson);
+        }
+
+        return io.to(socket.id).emit("user_join_call", resJson);
       } catch (err) {
         console.log("Err join:", err);
         socket.emit("socket_error", {
